@@ -13,29 +13,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import wickedmonkstudio.exchangerates.event.ExchangeRateEvent;
 import wickedmonkstudio.exchangerates.event.ExchangeRateListener;
-import wickedmonkstudio.exchangerates.model.ExchangeRates;
 import wickedmonkstudio.exchangerates.model.GraphDrawerTask;
 import wickedmonkstudio.exchangerates.model.MinMaxRecord;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 public class Controller {
-
 
     @FXML private AnchorPane mainPane;
     @FXML private TextArea logArea;
@@ -57,7 +46,7 @@ public class Controller {
 
 
     private String baseCurrency = "EUR";
-    private String exchangeCurrency = "PLN, USD";
+    private String exchangeCurrency = "PLN, USD, GBP";
 
     @FXML public void initialize(){
         ratesChart= new LineChart<String, Number>(xAxis, yAxis);
@@ -66,17 +55,17 @@ public class Controller {
         ratesChart.setPrefWidth(mainPane.getPrefWidth());
         mainPane.getChildren().add(ratesChart);
         ratesChart.setTitle("Exchange rates over time");
+        ratesChart.setCreateSymbols(false);
 
 
         endDatePicker.setValue(LocalDate.now());
+        startDatePicker.setValue(LocalDate.now().minusMonths(1));
         generateChartButton.setOnAction(event -> {
+            logArea.setText("Collecting data, please wait...");
             startDate=startDatePicker.getValue();
             endDate=endDatePicker.getValue();
             graphDrawerTask=new GraphDrawerTask(this);
             graphDrawerTask.addListener(exchangeRateListener);
-            graphDrawerTask.setOnSucceeded( event1 -> {
-                logArea.appendText("\n--------------------------------\n");
-            });
            new Thread(graphDrawerTask).start();
         });
 
@@ -102,7 +91,8 @@ public class Controller {
         @Override
         public void raportExchangeRates() {
             Platform.runLater(() -> {
-                logArea.appendText("Base currency: "+baseCurrency);
+                logArea.setText("Data gathered successfully. \nRequest report:");
+                logArea.appendText("\nBase currency: "+baseCurrency);
                 for(Map.Entry<String, MinMaxRecord> entry : currencyRecords.entrySet()){
                     logArea.appendText("\nCurrency: "+entry.getKey());
                     logArea.appendText("\n\tMinimal rate: "+entry.getValue().getMinimalValue().getValue() + " at " + entry.getValue().getMinimalValue().getKey());

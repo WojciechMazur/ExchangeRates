@@ -5,11 +5,11 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="480.0" style="-fx-background-color: #404040;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wickedmonkstudio.exchangerates.view.Controller">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="480.0" style="-fx-background-color: #E0E0E0;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wickedmonkstudio.exchangerates.view.Controller">
    <children>
-      <TextArea fx:id="logArea" editable="false" layoutX="50.0" layoutY="406.0" prefHeight="123.0" prefWidth="380.0" style="-fx-background-color: #AAAAAA;" wrapText="true" />
-      <DatePicker fx:id="startDatePicker" layoutX="49.0" layoutY="547.0" promptText="Start date" />
-      <DatePicker fx:id="endDatePicker" layoutX="252.0" layoutY="547.0" promptText="End date" />
-      <Button fx:id="generateChartButton" layoutX="197.0" layoutY="613.0" mnemonicParsing="false" text="Generate chart" />
+      <TextArea fx:id="logArea" editable="false" layoutX="50.0" layoutY="406.0" prefHeight="199.0" prefWidth="380.0" style="-fx-background-color: #AAAAAA;" wrapText="true" />
+      <DatePicker fx:id="startDatePicker" layoutX="52.0" layoutY="623.0" promptText="Start date" />
+      <DatePicker fx:id="endDatePicker" layoutX="255.0" layoutY="623.0" promptText="End date" />
+      <Button fx:id="generateChartButton" layoutX="200.0" layoutY="670.0" mnemonicParsing="false" text="Generate chart" />
    </children>
 </AnchorPane>

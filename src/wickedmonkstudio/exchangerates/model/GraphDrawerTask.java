@@ -3,7 +3,9 @@ package wickedmonkstudio.exchangerates.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import javafx.scene.chart.XYChart;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import wickedmonkstudio.exchangerates.event.ExchangeRateEvent;
@@ -86,6 +88,11 @@ public class GraphDrawerTask extends Task {
             exchangeRateListenerArrayList.remove(listener);
     }
 
+    /**
+     * Not used
+     * @return
+     * @throws IOException
+     */
     public ExchangeRates getExchangeRate() throws IOException {
         URL url = null;
         try {
@@ -140,13 +147,20 @@ public class GraphDrawerTask extends Task {
 
     public ExchangeRates getExchangeRate(LocalDate date, String base, String symbols) throws IOException {
         try {
+            int status;
+            HttpURLConnection httpURLConnection;
             URL url = buildURL(date, base, symbols).toURL();
-            URLConnection urlConnection = url.openConnection();
-            inputStreamReader= new InputStreamReader(urlConnection.getInputStream());
+            do {
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                if((status=httpURLConnection.getResponseCode())==429)
+                    Thread.sleep(50);
+            }while (status== 429);
+            inputStreamReader= new InputStreamReader(httpURLConnection.getInputStream());
             return objectMapper.readValue(inputStreamReader, ExchangeRates.class);
-        } catch (MalformedURLException | URISyntaxException e) {
+        } catch (MalformedURLException | URISyntaxException | InterruptedException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if(inputStreamReader!=null)
                 inputStreamReader.close();
         }

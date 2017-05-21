@@ -7,7 +7,6 @@ import java.util.EventListener;
  */
 public interface ExchangeRateListener extends EventListener {
     void handleGraphDrawning(ExchangeRateEvent event);
-//    void logExchangeRate(ExchangeRateEvent event);
     void raportExchangeRates();
     void handleExchangeRecordValues(ExchangeRateEvent event);
 

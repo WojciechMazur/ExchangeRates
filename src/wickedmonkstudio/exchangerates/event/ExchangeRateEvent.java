@@ -24,6 +24,7 @@ public class ExchangeRateEvent extends EventObject{
         this.rates=data.getRates();
     }
 
+
     public String getBase() {
         return baseCurrency;
     }
