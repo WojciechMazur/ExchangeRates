@@ -2,10 +2,7 @@ package wickedmonkstudio.exchangerates.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
-import javafx.scene.chart.XYChart;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import wickedmonkstudio.exchangerates.event.ExchangeRateEvent;
@@ -15,24 +12,22 @@ import wickedmonkstudio.exchangerates.view.Controller;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Wojciech on 20.05.2017.
  */
-public class GraphDrawerTask extends Task {
+public class FixerIORequestTask extends Task {
     Controller controller = null;
     private ArrayList<ExchangeRateListener> exchangeRateListenerArrayList = new ArrayList<>();
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private InputStreamReader inputStreamReader;
 
-    public GraphDrawerTask(Controller controller){
+    public FixerIORequestTask(Controller controller){
         this.controller=controller;
         this.controller.getDataSeries().clear();
         this.controller.getRatesChart().getData().clear();
@@ -55,7 +50,7 @@ public class GraphDrawerTask extends Task {
         return "Finished";
     }
 
-    private void processRequstedExchangeRate(ExchangeRateEvent event) {
+   private void processRequstedExchangeRate(ExchangeRateEvent event) {
         ArrayList<ExchangeRateListener> listenersCopy;
         if(exchangeRateListenerArrayList.size()==0)
             return;

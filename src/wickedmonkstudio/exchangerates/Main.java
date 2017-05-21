@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("view/MainLayout.fxml"));
         primaryStage.setTitle("Exchange rates");
-        primaryStage.setScene(new Scene(root, 480, 720));
+        primaryStage.setScene(new Scene(root, 580, 720));
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(e->{
