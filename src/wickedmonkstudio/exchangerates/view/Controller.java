@@ -47,8 +47,8 @@ public class Controller {
 
     private TreeSet<String> availableCurrencySet = new TreeSet<>();
 
-    CategoryAxis xAxis = new CategoryAxis();
-    NumberAxis yAxis = new NumberAxis();
+    private CategoryAxis xAxis = new CategoryAxis();
+    private NumberAxis yAxis = new NumberAxis();
 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -63,7 +63,7 @@ public class Controller {
         initBaseCurrencyComboBox();
 
 
-        ratesChart= new LineChart<String, Number>(xAxis, yAxis);
+        ratesChart= new LineChart<>(xAxis, yAxis);
         xAxis.setLabel("Exchange rates");
         yAxis.setLabel("Value according to base currency");
         ratesChart.setPrefWidth(mainPane.getPrefWidth());
@@ -89,9 +89,7 @@ public class Controller {
 
     private void initBaseCurrencyComboBox() {
         baseCurrencyComboBox.setItems(FXCollections.observableArrayList(availableCurrencySet));
-        baseCurrencyComboBox.setOnAction(e -> {
-            baseCurrency = baseCurrencyComboBox.getValue();
-        });
+        baseCurrencyComboBox.setOnAction(e -> baseCurrency = baseCurrencyComboBox.getValue());
     }
 
     private String getSelectedCurrency() {
@@ -107,10 +105,9 @@ public class Controller {
     }
 
     private void initCurrencyCheckBoxes() {
-        Iterator iterator = availableCurrencySet.iterator();
-        while (iterator.hasNext()){
-            CheckBox box = new CheckBox(iterator.next().toString());
-            if(box.getText().equals("PLN"))
+        for (Object anAvailableCurrencySet : availableCurrencySet) {
+            CheckBox box = new CheckBox(anAvailableCurrencySet.toString());
+            if (box.getText().equals("PLN"))
                 box.setSelected(true);
             selectCurrencysTilePane.getChildren().add(box);
         }
@@ -118,15 +115,17 @@ public class Controller {
 
     private void initAvailableCurrencyList() {
         ExchangeRates request = getFixerIODefaultRequest();
+        if (request != null) {
         availableCurrencySet.add(request.getBase());
-        for(Map.Entry<String, Double> entry : request.getRates().entrySet())
-                availableCurrencySet.add(entry.getKey());
+            for(Map.Entry<String, Double> entry : request.getRates().entrySet())
+                    availableCurrencySet.add(entry.getKey());
+        }
     }
 
     private ExchangeRates getFixerIODefaultRequest() {
         InputStreamReader inputStreamReader = null;
 
-        URL url = null;
+        URL url;
         try {
             url = new URL("http://api.fixer.io/latest");
             URLConnection urlConnection = url.openConnection();
@@ -190,8 +189,8 @@ public class Controller {
             for(Map.Entry<String, Double> entry : event.getRates().entrySet()){
                 if(!currencyRecords.containsKey(entry.getKey())){
                     currencyRecords.put(entry.getKey(), new MinMaxRecord(
-                            new Pair<LocalDate, Double>(event.getDate(), entry.getValue()),
-                            new Pair<LocalDate, Double>(event.getDate(), entry.getValue())));
+                            new Pair<>(event.getDate(), entry.getValue()),
+                            new Pair<>(event.getDate(), entry.getValue())));
                 }else {
                     if(entry.getValue() > currencyRecords.get(entry.getKey()).getMaximalValue().getValue())
                         currencyRecords.get(entry.getKey()).setMaximalValue(new Pair<>(event.getDate(), entry.getValue()));
@@ -210,10 +209,6 @@ public class Controller {
     public HashMap<String, XYChart.Series> getDataSeries() {
 
         return dataSeries;
-    }
-
-    public TextArea getLogArea() {
-        return logArea;
     }
 
     public LocalDate getStartDate() {

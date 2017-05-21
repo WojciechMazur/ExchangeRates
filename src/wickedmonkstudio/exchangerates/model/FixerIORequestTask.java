@@ -17,11 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Wojciech on 20.05.2017.
- */
 public class FixerIORequestTask extends Task {
-    Controller controller = null;
+    private Controller controller = null;
     private ArrayList<ExchangeRateListener> exchangeRateListenerArrayList = new ArrayList<>();
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -83,64 +80,7 @@ public class FixerIORequestTask extends Task {
             exchangeRateListenerArrayList.remove(listener);
     }
 
-    /**
-     * Not used
-     * @return
-     * @throws IOException
-     */
-    public ExchangeRates getExchangeRate() throws IOException {
-        URL url = null;
-        try {
-            url = new URL("http://api.fixer.io/latest");
-            URLConnection urlConnection = url.openConnection();
-            inputStreamReader= new InputStreamReader(urlConnection.getInputStream());
-            return objectMapper.readValue(inputStreamReader, ExchangeRates.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(inputStreamReader!=null)
-                inputStreamReader.close();
-        }
-        return null;
-    }
-
-    /**
-     * Not used
-     * @param urlString
-     * @return
-     * @throws IOException
-     */
-    public ExchangeRates getExchangeRate(String urlString) throws IOException {
-        try {
-            URL url = new URL(urlString);
-            URLConnection urlConnection = url.openConnection();
-            inputStreamReader = new InputStreamReader(urlConnection.getInputStream());
-            return objectMapper.readValue(inputStreamReader, ExchangeRates.class);
-        } finally {
-            if (inputStreamReader != null)
-                inputStreamReader.close();
-        }
-    }
-
-    /**
-     * Not used
-     * @param date
-     * @return
-     * @throws IOException
-     */
-    public ExchangeRates getExchangeRate(LocalDate date)throws IOException{
-        try{
-            URL url = new URL("http://api.fixer.io/"+date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            URLConnection urlConnection = url.openConnection();
-            inputStreamReader =  new InputStreamReader(urlConnection.getInputStream());
-            return objectMapper.readValue(inputStreamReader, ExchangeRates.class);
-        }finally {
-            if (inputStreamReader != null)
-                inputStreamReader.close();
-        }
-    }
-
-    public ExchangeRates getExchangeRate(LocalDate date, String base, String symbols) throws IOException {
+    private ExchangeRates getExchangeRate(LocalDate date, String base, String symbols) throws IOException {
         try {
             int status;
             HttpURLConnection httpURLConnection;
@@ -174,8 +114,7 @@ public class FixerIORequestTask extends Task {
                 .setHost("api.fixer.io")
                 .setPath(date.format(DateTimeFormatter.ofPattern("/yyyy-MM-dd")))
                 .setParameters(nameValuePairList);
-        URI uri = uriBuilder.build();
-        return uri;
+        return uriBuilder.build();
     }
 
 }
